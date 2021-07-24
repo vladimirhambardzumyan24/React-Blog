@@ -1,18 +1,29 @@
 import React from "react";
 import "./App.css";
-import MenuAppBar from "./components/Navbar.jsx"
-
+import Home from "./components/Home.jsx";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import SignIn from "./components/SignIn";
+import User from "./components/User";
+import Blocks from "./components/Blocks";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render() {
     return (
-      <MenuAppBar />
-    )
+      <Router>
+        <Home />
+        <Switch>
+          <Route path="/blocks">
+            <Blocks />
+          </Route>
+          <Route path="/sign-in">
+            <SignIn />
+          </Route>
+          <Route path="/users">
+            <User />
+          </Route>
+        </Switch>
+      </Router>
+    );
   }
 }
 

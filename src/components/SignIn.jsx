@@ -9,7 +9,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import {  withRouter } from "react-router-dom";
 
 const useStyles = (theme) => ({
   paper: {
@@ -34,17 +34,31 @@ const useStyles = (theme) => ({
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      emailValue:"",
+      passValue:"",
+      isLogin:false
+    };
   }
 
   handleLogin = (e) => {
     e.preventDefault();
-    console.log("object");
+    if(this.state.emailValue && this.state.passValue){
+      this.props.history.push("/users");
+      this.setState({isLogin:true})
+    }
+    
   };
+
+  handleEmail=(email)=>{
+    this.setState({emailValue:email.target.value})
+  }
+  handlePassword=(pass)=>{
+    this.setState({passValue:pass.target.value})
+  }
 
   render() {
     const { classes } = this.props;
-    console.log(classes)
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -53,9 +67,10 @@ class SignIn extends React.Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Log In
           </Typography>
-          <form className={classes.form} noValidate onClick={this.handleLogin}>
+
+          <form className={classes.form} noValidate >
             <TextField
               variant="outlined"
               margin="normal"
@@ -66,6 +81,7 @@ class SignIn extends React.Component {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={this.handleEmail}
             />
             <TextField
               variant="outlined"
@@ -74,24 +90,18 @@ class SignIn extends React.Component {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type="password" 
               id="password"
               autoComplete="current-password"
+              onChange={this.handlePassword}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Link to="/blocks" style={{ textDecoration: "none" }}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                Log In
-              </Button>
-            </Link>
+            <Button type="submit" fullWidth variant="contained" color="primary" onClick={this.handleLogin}>
+              Log In
+            </Button>
           </form>
         </div>
       </Container>
@@ -99,4 +109,4 @@ class SignIn extends React.Component {
   }
 }
 
-export default withStyles(useStyles,  { withTheme: true })(SignIn);
+export default withRouter(withStyles(useStyles, { withTheme: true })(SignIn));
