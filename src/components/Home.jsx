@@ -34,12 +34,12 @@ export default function Home({ isLoggedIn ,handleRemoveBlock}) {
               </Link>
             </Typography>
             <Typography variant="h6" className={classes.title}>
-                <Button variant="contained" color="primary">
-                  Create Post
+                
                   {
-                    window.localStorage.getItem("emailValue")?<Link to="/users"></Link>:<Redirect to="/sign-in" />
+                    window.localStorage.getItem("emailValue")?<Link to="/users"><Button variant="contained" color="primary">
+                    Create Post</Button></Link>:<Redirect to="/sign-in" />
                   }
-                </Button>
+                
             </Typography>
             {isLoggedIn? (
               <Link to="/sign-in" style={{ textDecoration: "none" }}>
