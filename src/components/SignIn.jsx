@@ -9,7 +9,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
-import {  withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 const useStyles = (theme) => ({
   paper: {
@@ -35,27 +35,24 @@ class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      emailValue:"",
-      passValue:"",
-      isLogin:false
+      emailValue: "",
+      passValue: "",
     };
   }
 
   handleLogin = (e) => {
-    e.preventDefault();
-    if(this.state.emailValue && this.state.passValue){
+    if (this.state.emailValue && this.state.passValue) {
       this.props.history.push("/users");
-      this.setState({isLogin:true})
+      window.localStorage.setItem("emailValue", this.state.emailValue);
     }
-    
   };
 
-  handleEmail=(email)=>{
-    this.setState({emailValue:email.target.value})
-  }
-  handlePassword=(pass)=>{
-    this.setState({passValue:pass.target.value})
-  }
+  handleEmail = (email) => {
+    this.setState({ emailValue: email.target.value });
+  };
+  handlePassword = (pass) => {
+    this.setState({ passValue: pass.target.value });
+  };
 
   render() {
     const { classes } = this.props;
@@ -70,7 +67,7 @@ class SignIn extends React.Component {
             Log In
           </Typography>
 
-          <form className={classes.form} noValidate >
+          <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -90,7 +87,7 @@ class SignIn extends React.Component {
               fullWidth
               name="password"
               label="Password"
-              type="password" 
+              type="password"
               id="password"
               autoComplete="current-password"
               onChange={this.handlePassword}
@@ -99,7 +96,15 @@ class SignIn extends React.Component {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button type="submit" fullWidth variant="contained" color="primary" onClick={this.handleLogin}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.handleLogin();
+                this.props.handleLogIN();
+              }}
+            >
               Log In
             </Button>
           </form>

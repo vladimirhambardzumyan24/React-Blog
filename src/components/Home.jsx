@@ -4,7 +4,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -17,31 +18,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-export default function Home() {
+export default function Home({ isLoggedIn ,handleRemoveBlock}) {
   const classes = useStyles();
-
 
   return (
     <>
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            <Link to="/blocks" style={{ textDecoration: "none" }}>
-              <Button variant="contained" color="primary">
-                Blocks
-              </Button>
-            </Link>
-          </Typography>
-          <Link to="/sign-in" style={{ textDecoration: "none" }}>
-            <Button variant="contained" color="primary" >
-              Log In
-            </Button>
-          </Link>
-        </Toolbar>
-      </AppBar>
-    </div>
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              <Link to="/blocks" style={{ textDecoration: "none" }}>
+                <Button variant="contained" color="primary">
+                  Blocks
+                </Button>
+              </Link>
+            </Typography>
+            <Typography variant="h6" className={classes.title}>
+                <Button variant="contained" color="primary">
+                  Create Post
+                  {
+                    window.localStorage.getItem("emailValue")?<Link to="/users"></Link>:<Redirect to="/sign-in" />
+                  }
+                </Button>
+            </Typography>
+            {isLoggedIn? (
+              <Link to="/sign-in" style={{ textDecoration: "none" }}>
+                <Button variant="contained" color="primary" onClick={handleRemoveBlock}>
+                  Log Out
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/sign-in" style={{ textDecoration: "none" }}>
+                <Button variant="contained" color="primary">
+                  Log In
+                </Button>
+              </Link>
+            )}
+          </Toolbar>
+        </AppBar>
+      </div>
     </>
   );
 }
