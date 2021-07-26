@@ -21,7 +21,7 @@ class General extends React.Component {
     super(props);
     this.state = {
       isLoggedIn:false,
-      blocks: getToDo() === undefined ? [] : getToDo(),
+      blocks: getToDo() === null ? [] : getToDo(),
     };
   }
   componentDidUpdate() {
