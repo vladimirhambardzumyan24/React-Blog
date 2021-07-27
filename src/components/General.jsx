@@ -1,10 +1,16 @@
 import React from "react";
 import User from "./User";
-import { getToDo, ToDoSave } from "../helper/LocalStorage";
+import {
+  getBlocks,
+  BlocksSave,
+  saveThisBlock,
+  getThisBlock,
+} from "../helper/LocalStorage";
 import Blocks from "./Blocks";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import SignIn from "./SignIn";
 import Home from "./Home";
+import ThisBlock from "./ThisBlock";
 
 const idGenerator = () => {
   let id = 0;
@@ -20,21 +26,27 @@ class General extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn:false,
-      blocks: getToDo() === null ? [] : getToDo(),
+      isLoggedIn: false,
+      none: "none",
+      show: "show",
+      change: "",
+      thisBlock: getThisBlock() === null ? {} : getThisBlock(),
+      blocks: getBlocks() === null ? [] : getBlocks(),
     };
   }
+  
   componentDidUpdate() {
-    ToDoSave(this.state.blocks);
+    BlocksSave(this.state.blocks);
   }
 
-  handleLogIN=()=>{
-    this.setState((prevState)=>{
-      return{
-        isLoggedIn:true
-      }
-    })
-  }
+  handleLogIN = () => {
+    this.setState((prevState) => {
+      return {
+        isLoggedIn: true,
+      };
+    });
+  };
+
   handleClickAdd = (newObj) => {
     if (newObj.titleValue && newObj.contentValue) {
       this.setState((pathState) => {
@@ -45,7 +57,7 @@ class General extends React.Component {
               ...newObj,
               id: getRandomId(),
               date: new Date().toLocaleString(),
-              email:window.localStorage.getItem("emailValue")
+              email: window.localStorage.getItem("emailValue"),
             },
           ],
         };
@@ -53,44 +65,86 @@ class General extends React.Component {
     }
   };
 
-  handleDeleteBlok = (blok) => {
-    if(blok.email===window.localStorage.getItem("emailValue")){
-      this.setState((pastState) => ({
-      blocks: pastState.blocks.filter((e) => e.id !== blok.id),
+  handleDeleteBlok = (id) => {
+    console.log(`object`, id);
+    this.setState((pastState) => ({
+      blocks: pastState.blocks.filter((e) => e.id !== id),
     }));
-    }
+    this.props.history.push("/blocks");
   };
 
-  handleRemoveBlock=()=>{
-    this.setState({isLoggedIn:false})
-    window.localStorage.removeItem("emailValue")
-  }
+  takeBlock = (block) => {
+    this.setState({ thisBlock: block });
+    saveThisBlock(block);
+  };
+
+  handleRemoveBlock = () => {
+    this.setState({ isLoggedIn: false });
+    window.localStorage.removeItem("emailValue");
+  };
+
+  handleEditBlok = (blok) => {
+    this.setState({ none: "show", show: "none" });
+  };
+
+  handleSaveEdit = (blok) => {
+    const newBlocks = this.state.blocks.map((el) => {
+      if (el.id === blok.id) {
+        saveThisBlock(el);
+        return { ...el, contentValue: this.state.change };
+      }
+      return el;
+    });
+
+    this.setState({
+      none: "none",
+      show: "show",
+      blocks: [...newBlocks],
+    });
+    this.props.history.push("/blocks");
+  };
+
+  handleChange = (e) => {
+    this.setState({ change: e.target.value });
+  };
 
   render() {
     return (
       <>
-      <Home isLoggedIn={this.state.isLoggedIn} handleRemoveBlock={this.handleRemoveBlock}/>
-          <Switch>
-            <Route exact path="/sign-in">
-              <SignIn handleLogIN={this.handleLogIN}/>
-            </Route>
-            <Route exact path="/blocks">
-              <Blocks
-                blocks={this.state.blocks}
-                onDeleteBlok={this.handleDeleteBlok}
-              />
-            </Route>
-            <Route exact path="/users">
-              <User
-                handleClickAdd={this.handleClickAdd}
-                titleValue={this.state.inputTitle}
-                contentValue={this.state.inputContent}
-              />
-            </Route>
-          </Switch>
+        <Home
+          isLoggedIn={this.state.isLoggedIn}
+          handleRemoveBlock={this.handleRemoveBlock}
+        />
+        <Switch>
+          <Route exact path="/sign-in">
+            <SignIn handleLogIN={this.handleLogIN} />
+          </Route>
+          <Route exact path="/blocks">
+            <Blocks blocks={this.state.blocks} takeBlock={this.takeBlock} />
+          </Route>
+          <Route exact path="/users">
+            <User
+              handleClickAdd={this.handleClickAdd}
+              titleValue={this.state.inputTitle}
+              contentValue={this.state.inputContent}
+            />
+          </Route>
+          <Route exact path="/blocks/:id">
+            <ThisBlock
+              block={this.state.thisBlock}
+              onDeleteBlok={this.handleDeleteBlok}
+              onEditBlok={this.handleEditBlok}
+              none={this.state.none}
+              show={this.state.show}
+              onSaveEdit={this.handleSaveEdit}
+              onChangeValue={this.handleChange}
+              changeValue={this.state.change}
+            />
+          </Route>
+        </Switch>
       </>
     );
   }
 }
 
-export default General;
+export default withRouter(General);

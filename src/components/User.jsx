@@ -42,7 +42,7 @@ class User extends React.Component {
           <TextField
             value={this.state.inputContent}
             id="standard-basic"
-            label="Content"
+            label="Comment"
             onChange={this.onChangeContent}
           ></TextField>
           <Button

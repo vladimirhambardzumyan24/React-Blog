@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Home({ isLoggedIn ,handleRemoveBlock}) {
+export default function Home({ isLoggedIn, handleRemoveBlock }) {
   const classes = useStyles();
 
   return (
@@ -34,16 +34,23 @@ export default function Home({ isLoggedIn ,handleRemoveBlock}) {
               </Link>
             </Typography>
             <Typography variant="h6" className={classes.title}>
-                
-                  {
-                    window.localStorage.getItem("emailValue")?<Link to="/users"><Button variant="contained" color="primary">
-                    Create Post</Button></Link>:<Redirect to="/sign-in" />
-                  }
-                
+              {window.localStorage.getItem("emailValue") ? (
+                <Link to="/users">
+                  <Button variant="contained" color="primary">
+                    Create Post
+                  </Button>
+                </Link>
+              ) : (
+                <Redirect to="/sign-in" />
+              )}
             </Typography>
-            {isLoggedIn? (
+            {isLoggedIn ? (
               <Link to="/sign-in" style={{ textDecoration: "none" }}>
-                <Button variant="contained" color="primary" onClick={handleRemoveBlock}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleRemoveBlock}
+                >
                   Log Out
                 </Button>
               </Link>

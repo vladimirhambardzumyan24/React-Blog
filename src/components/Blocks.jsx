@@ -5,6 +5,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { NavLink } from "react-router-dom";
+import { Container } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -23,11 +25,11 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Blocks({ blocks,onDeleteBlok }) {
+export default function Blocks({ blocks, takeBlock }) {
   const classes = useStyles();
-  
+
   return blocks.map((blok) => (
-    <div key={blok.id}>
+    <Container maxWidth="lg" key={blok.id}>
       <Card className={classes.root} variant="outlined">
         <CardContent>
           <Typography variant="h5" component="h2">
@@ -38,16 +40,17 @@ export default function Blocks({ blocks,onDeleteBlok }) {
             {blok.contentValue}
           </Typography>
           <br />
-          <Typography className={classes.pos} color="textSecondary">
-            <Button size="small">Learn More</Button>
-          </Typography>
+          <NavLink to={`/blocks/${blok.id}`}>
+            <Typography className={classes.pos} color="textSecondary">
+              <Button color="primary" size="small" onClick={() => takeBlock(blok)}>
+                Learn More
+              </Button>
+            </Typography>
+          </NavLink>
         </CardContent>
         <CardActions>{blok.date}</CardActions>
-        <Button variant="contained" color="secondary" onClick={()=>{onDeleteBlok(blok)}}>
-          Delete
-        </Button>
       </Card>
       <br />
-    </div>
+    </Container>
   ));
 }
