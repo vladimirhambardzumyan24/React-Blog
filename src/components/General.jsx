@@ -11,6 +11,7 @@ import { Switch, Route, withRouter } from "react-router-dom";
 import SignIn from "./SignIn";
 import Home from "./Home";
 import ThisBlock from "./ThisBlock";
+import ErrorPage from "./ErrorPage";
 
 const idGenerator = () => {
   let id = 0;
@@ -116,7 +117,7 @@ class General extends React.Component {
           handleRemoveBlock={this.handleRemoveBlock}
         />
         <Switch>
-          <Route exact path="/sign-in">
+          <Route exact path={["/sign-in","/"]}>
             <SignIn handleLogIN={this.handleLogIN} />
           </Route>
           <Route exact path="/blocks">
@@ -140,6 +141,9 @@ class General extends React.Component {
               onChangeValue={this.handleChange}
               changeValue={this.state.change}
             />
+          </Route>
+          <Route exact path="*">
+              <ErrorPage />
           </Route>
         </Switch>
       </>
